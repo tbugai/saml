@@ -180,27 +180,27 @@ func (sp *ServiceProvider) MakeRedirectAuthenticationRequest(relayState string) 
 
 // Redirect returns a URL suitable for using the redirect binding with the request
 func (req *AuthnRequest) Redirect(relayState string) *url.URL {
-	w := &bytes.Buffer{}
-	w1 := base64.NewEncoder(base64.StdEncoding, w)
-	w2, _ := flate.NewWriter(w1, 9)
+	buffer := &bytes.Buffer{}
+	encoder := base64.NewEncoder(base64.StdEncoding, buffer)
+	compressor, _ := flate.NewWriter(encoder, 9)
 	doc := etree.NewDocument()
 	doc.SetRoot(req.Element())
-	if _, err := doc.WriteTo(w2); err != nil {
+	if _, err := doc.WriteTo(compressor); err != nil {
 		panic(err)
 	}
-	w2.Close()
-	w1.Close()
+	compressor.Close()
+	encoder.Close()
 
-	rv, _ := url.Parse(req.Destination)
+	redirectURL, _ := url.Parse(req.Destination)
 
-	query := rv.Query()
-	query.Set("SAMLRequest", string(w.Bytes()))
+	query := redirectURL.Query()
+	query.Set("SAMLRequest", string(buffer.Bytes()))
 	if relayState != "" {
 		query.Set("RelayState", relayState)
 	}
-	rv.RawQuery = query.Encode()
+	redirectURL.RawQuery = query.Encode()
 
-	return rv
+	return redirectURL
 }
 
 // GetSSOBindingLocation returns URL for the IDP's Single Sign On Service binding
@@ -214,6 +214,31 @@ func (sp *ServiceProvider) GetSSOBindingLocation(binding string) string {
 		}
 	}
 	return ""
+}
+
+// Redirect returns a URL suitable for using the redirect binding with the request
+func (req *LogoutRequest) Redirect(relayState string) *url.URL {
+	buffer := &bytes.Buffer{}
+	encoder := base64.NewEncoder(base64.StdEncoding, buffer)
+	compressor, _ := flate.NewWriter(encoder, 9)
+	doc := etree.NewDocument()
+	doc.SetRoot(req.Element())
+	if _, err := doc.WriteTo(compressor); err != nil {
+		panic(err)
+	}
+	compressor.Close()
+	encoder.Close()
+
+	redirectURL, _ := url.Parse(req.Destination)
+
+	query := redirectURL.Query()
+	query.Set("SAMLRequest", string(buffer.Bytes()))
+	if relayState != "" {
+		query.Set("RelayState", relayState)
+	}
+	redirectURL.RawQuery = query.Encode()
+
+	return redirectURL
 }
 
 // GetSLOBindingLocation returns URL for the IDP's Single Log Out Service binding
