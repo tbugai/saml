@@ -39,8 +39,13 @@ type Options struct {
 func New(opts Options) (*Middleware, error) {
 	metadataRelURL, _ := url.Parse("saml/metadata")
 	metadataURL := opts.URL.ResolveReference(metadataRelURL)
+
 	acsRelURL, _ := url.Parse("saml/acs")
 	acsURL := opts.URL.ResolveReference(acsRelURL)
+
+	sloRelURL := url.Parse("saml/slo")
+	sloURL := opts.URL.ResolveReference(sloRelURL)
+
 	logr := opts.Logger
 	if logr == nil {
 		logr = logger.DefaultLogger
@@ -58,6 +63,7 @@ func New(opts Options) (*Middleware, error) {
 			Certificate: opts.Certificate,
 			MetadataURL: *metadataURL,
 			AcsURL:      *acsURL,
+			SloURL:      *sloURL,
 			IDPMetadata: opts.IDPMetadata,
 			ForceAuthn:  &opts.ForceAuthn,
 		},
