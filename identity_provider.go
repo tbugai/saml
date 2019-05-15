@@ -20,9 +20,9 @@ import (
 	"time"
 
 	"github.com/beevik/etree"
-	"github.com/crewjam/saml/logger"
-	"github.com/crewjam/saml/xmlenc"
 	dsig "github.com/russellhaering/goxmldsig"
+	"github.com/tbugai/saml/logger"
+	"github.com/tbugai/saml/xmlenc"
 )
 
 // Session represents a user session. It is returned by the

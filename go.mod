@@ -4,7 +4,6 @@ go 1.12
 
 require (
 	github.com/beevik/etree v1.0.1
-	github.com/crewjam/saml v0.0.0-20170522121329-6b5dd2d26974
 	github.com/dchest/uniuri v0.0.0-20160212164326-8902c56451e9
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/jonboulle/clockwork v0.1.0

@@ -12,8 +12,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/crewjam/saml"
-	"github.com/crewjam/saml/logger"
+	"github.com/tbugai/saml"
+	"github.com/tbugai/saml/logger"
 )
 
 const defaultTokenMaxAge = time.Hour
@@ -43,7 +43,7 @@ func New(opts Options) (*Middleware, error) {
 	acsRelURL, _ := url.Parse("saml/acs")
 	acsURL := opts.URL.ResolveReference(acsRelURL)
 
-	sloRelURL := url.Parse("saml/slo")
+	sloRelURL, _ := url.Parse("saml/slo")
 	sloURL := opts.URL.ResolveReference(sloRelURL)
 
 	logr := opts.Logger
@@ -105,7 +105,7 @@ func New(opts Options) (*Middleware, error) {
 	}
 	// Some providers (like OneLogin) do not work properly unless the User-Agent header is specified.
 	// Setting the user agent prevents the 403 Forbidden errors.
-	req.Header.Set("User-Agent", "Golang; github.com/crewjam/saml")
+	req.Header.Set("User-Agent", "Golang; github.com/tbugai/saml")
 
 	for i := 0; true; i++ {
 		resp, err := c.Do(req)
